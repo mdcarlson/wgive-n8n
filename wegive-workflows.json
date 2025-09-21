@@ -1,0 +1,103 @@
+{
+  "workflows": [
+    {
+      "name": "WeGive - Get All Campaigns",
+      "nodes": [
+        {
+          "parameters": {
+            "method": "GET",
+            "url": "https://api.wegive.com/api/dashboard/campaigns",
+            "authentication": "predefinedCredentialType",
+            "nodeCredentialType": "httpHeaderAuth",
+            "options": {
+              "headers": {
+                "Accept": "application/json"
+              },
+              "queryParameters": {
+                "view": "all",
+                "count": "50"
+              }
+            }
+          },
+          "name": "Get Campaigns",
+          "type": "n8n-nodes-base.httpRequest",
+          "typeVersion": 4.2,
+          "position": [400, 300]
+        }
+      ]
+    },
+    {
+      "name": "WeGive - Get Campaign Details",
+      "nodes": [
+        {
+          "parameters": {
+            "method": "GET",
+            "url": "https://api.wegive.com/api/dashboard/campaigns/{{ $json.campaign_id }}",
+            "authentication": "predefinedCredentialType",
+            "nodeCredentialType": "httpHeaderAuth",
+            "options": {
+              "headers": {
+                "Accept": "application/json"
+              }
+            }
+          },
+          "name": "Get Campaign Details",
+          "type": "n8n-nodes-base.httpRequest",
+          "typeVersion": 4.2,
+          "position": [400, 300]
+        }
+      ]
+    },
+    {
+      "name": "WeGive - Get Donors",
+      "nodes": [
+        {
+          "parameters": {
+            "method": "GET",
+            "url": "https://api.wegive.com/api/dashboard/donors",
+            "authentication": "predefinedCredentialType",
+            "nodeCredentialType": "httpHeaderAuth",
+            "options": {
+              "headers": {
+                "Accept": "application/json"
+              },
+              "queryParameters": {
+                "count": "100"
+              }
+            }
+          },
+          "name": "Get Donors",
+          "type": "n8n-nodes-base.httpRequest",
+          "typeVersion": 4.2,
+          "position": [400, 300]
+        }
+      ]
+    },
+    {
+      "name": "WeGive - Get Transactions",
+      "nodes": [
+        {
+          "parameters": {
+            "method": "GET",
+            "url": "https://api.wegive.com/api/dashboard/transactions",
+            "authentication": "predefinedCredentialType",
+            "nodeCredentialType": "httpHeaderAuth",
+            "options": {
+              "headers": {
+                "Accept": "application/json"
+              },
+              "queryParameters": {
+                "count": "100",
+                "sort": "{\"created_at\": \"desc\"}"
+              }
+            }
+          },
+          "name": "Get Transactions",
+          "type": "n8n-nodes-base.httpRequest",
+          "typeVersion": 4.2,
+          "position": [400, 300]
+        }
+      ]
+    }
+  ]
+}

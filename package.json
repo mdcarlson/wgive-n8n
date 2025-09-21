@@ -1,5 +1,33 @@
 {
+  "name": "wgive-n8n",
+  "version": "1.0.0",
+  "description": "WeGive N8N custom node for integrating with WeGive API",
+  "main": "dist/wegive/wegive.node.js",
+  "files": [
+    "dist/**/*"
+  ],
+  "n8n": {
+    "n8nNodesApiVersion": 1,
+    "credentials": [
+      "dist/credentials/WeGive.credentials.js"
+    ],
+    "nodes": [
+      "dist/wegive/wegive.node.js"
+    ]
+  },
+  "scripts": {
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "clean": "rm -rf dist",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": ["n8n", "wegive", "fundraising", "donations"],
+  "author": "mdcarlson",
+  "license": "MIT",
   "dependencies": {
-    "@devlikeapro/n8n-openapi-node": "^0.1.4"
+    "@devlikeapro/n8n-openapi-node": "^0.1.4",
+    "@types/node": "^24.5.2",
+    "n8n-workflow": "^1.82.0",
+    "typescript": "^5.9.2"
   }
 }

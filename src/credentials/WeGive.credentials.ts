@@ -1,6 +1,6 @@
-import { ICredentialsType, INodeProperties } from 'n8n-workflow';
+import { ICredentialType, INodeProperties } from 'n8n-workflow';
 
-export class WeGiveCredentials implements ICredentialsType {
+export class WeGiveCredentials implements ICredentialType {
   name = 'WeGiveCredentials';
 
   displayName = 'WeGive API Credentials';

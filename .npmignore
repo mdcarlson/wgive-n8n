@@ -1,0 +1,6 @@
+src/
+test-node.js
+docker-compose.test.yml
+tsconfig.json
+*.log
+.DS_Store

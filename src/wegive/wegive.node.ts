@@ -1,9 +1,13 @@
 import {
+  ICredentialTestFunctions,
   IExecuteFunctions,
   INodeType,
   INodeTypeDescription,
   NodeOperationError,
   INodeExecutionData,
+  NodeConnectionType,
+  IHttpRequestMethods,
+  INodeCredentialTestResult,
 } from 'n8n-workflow';
 import { N8NPropertiesBuilder } from '@devlikeapro/n8n-openapi-node';
 import * as openApiSpec from './openapi.json';
@@ -26,8 +30,8 @@ export class WeGiveAPINode implements INodeType {
       name: 'WeGive API',
       color: '#772244',
     },
-    inputs: ['main'],
-    outputs: ['main'],
+    inputs: [NodeConnectionType.Main],
+    outputs: [NodeConnectionType.Main],
     credentials: [
       {
         name: 'WeGiveCredentials',
@@ -48,23 +52,28 @@ export class WeGiveAPINode implements INodeType {
 
   methods = {
     credentialTest: {
-      async weGiveApiTest(this: IExecuteFunctions, credential: any): Promise<boolean> {
-        const credentials = await this.getCredentials('WeGiveCredentials');
-        const options = {
-          method: 'GET',
-          uri: `${credentials.baseUrl}/api/dashboard/campaigns`,
-          headers: {
-            Authorization: `Bearer ${credentials.apiKey}`,
-            Accept: 'application/json',
-          },
-          json: true,
-        };
-
+      async weGiveApiTest(this: ICredentialTestFunctions, credential: any): Promise<INodeCredentialTestResult> {
         try {
+          const options = {
+            method: 'GET' as IHttpRequestMethods,
+            url: `${credential.baseUrl}/api/dashboard/campaigns`,
+            headers: {
+              Authorization: `Bearer ${credential.apiKey}`,
+              Accept: 'application/json',
+            },
+            json: true,
+          };
+
           await this.helpers.request(options);
-          return true;
+          return {
+            status: 'OK',
+            message: 'Authentication successful',
+          };
         } catch (error) {
-          return false;
+          return {
+            status: 'Error',
+            message: `Authentication failed: ${error instanceof Error ? error.message : 'Unknown error'}`,
+          };
         }
       },
     },

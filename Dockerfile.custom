@@ -1,0 +1,9 @@
+FROM n8nio/n8n:latest
+
+USER root
+
+# Copy and install the custom node
+COPY wgive-n8n-1.0.0.tgz /tmp/
+RUN cd /usr/local/lib/node_modules/n8n && npm install /tmp/wgive-n8n-1.0.0.tgz
+
+USER node

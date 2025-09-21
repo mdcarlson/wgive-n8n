@@ -1,0 +1,120 @@
+{
+  "name": "WeGive API - Complete Example",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "https://api.wegive.com/api/dashboard/campaigns",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "httpHeaderAuth",
+        "options": {
+          "headers": {
+            "Accept": "application/json"
+          },
+          "queryParameters": {
+            "view": "active",
+            "count": "10"
+          }
+        }
+      },
+      "name": "Get Active Campaigns",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [440, 300],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "YOUR_WEGIVE_CREDENTIAL_ID",
+          "name": "WeGive API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Process WeGive API response\nconst campaigns = $input.all()[0].json.data;\nconst output = [];\n\nfor (const campaign of campaigns) {\n  output.push({\n    json: {\n      id: campaign.id,\n      name: campaign.name,\n      type: campaign.type,\n      status: campaign.status,\n      created_at: campaign.created_at,\n      donation_count: campaign.donation_count,\n      net_donation_volume: campaign.net_donation_volume\n    }\n  });\n}\n\nreturn output;"
+      },
+      "name": "Process Campaign Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [640, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "1",
+              "leftValue": "={{ $json.donation_count }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "name": "Filter Active Campaigns",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2,
+      "position": [840, 300]
+    }
+  ],
+  "connections": {
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Get Active Campaigns",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Active Campaigns": {
+      "main": [
+        [
+          {
+            "node": "Process Campaign Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Campaign Data": {
+      "main": [
+        [
+          {
+            "node": "Filter Active Campaigns",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2024-09-20T17:30:00.000Z",
+  "id": "wegive-example",
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": {},
+  "tags": ["WeGive", "API", "Fundraising"],
+  "triggerCount": 1,
+  "updatedAt": "2024-09-20T17:30:00.000Z"
+}
